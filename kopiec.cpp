@@ -10,8 +10,9 @@ using namespace std;
 class BHeap {
 public:
     bool max = true;
-    bool compare(int a, int b);
-    vector <int> heap;
+    bool compare(string a, string b);
+    bool compareNumbers(string& str1, string& str2);
+    vector <string> heap;
     int l(int parent);
     int r(int parent);
     int par(int child);
@@ -19,13 +20,12 @@ public:
     void heapifydown(int index);
 
     BHeap() {}
-    void Insert(int element);
+    void Insert(string element);
     void DeleteMin();
-    int ExtractMin();
     void showHeap();
     void buduj();
 };
-void BHeap::Insert(int ele) {
+void BHeap::Insert(string ele) {
     heap.push_back(ele);
     heapifyup(heap.size() - 1);
 }
@@ -40,15 +40,8 @@ void BHeap::DeleteMin() {
     heap.pop_back();
     heapifydown(0);
 }
-int BHeap::ExtractMin() {
-    if (heap.size() == 0) {
-        return -1;
-    }
-    else
-        return heap.front();
-}
+
 void BHeap::showHeap() {
-    vector <int>::iterator pos = heap.begin();
     //cout << "Heap --> ";
     for (int i = 0; i < heap.size(); i++) {
         cout << heap[i] << " ";
@@ -59,11 +52,34 @@ void BHeap::showHeap() {
     }*/
     cout << endl;
 }
-bool BHeap::compare(int a, int b)
+bool BHeap::compare(string a, string b)
 {
-    if (!max) return a > b;
-    else return a < b;
+    if (max) return compareNumbers(a, b);
+    else return compareNumbers(b, a);
 }
+
+bool BHeap::compareNumbers(string& str1, string& str2)
+{
+    // Calculate lengths of both string
+    int n1 = str1.length(), n2 = str2.length();
+
+    if (n1 < n2)
+        return true;
+    if (n2 < n1)
+        return false;
+
+    // If lengths are same
+    for (int i = 0; i < n1; i++)
+    {
+        if (str1[i] < str2[i])
+            return true;
+        if (str1[i] > str2[i])
+            return false;
+    }
+
+    return false;
+}
+
 int BHeap::l(int parent) {
     int l = 2 * parent + 1;
     if (l < heap.size())
@@ -88,7 +104,7 @@ int BHeap::par(int child) {
 void BHeap::heapifyup(int in) {
     if (in >= 0 && par(in) >= 0 && compare(heap[par(in)], heap[in])) {
        // cout << "PARENT: " << heap[in] << " to " << heap[par(in)] << endl;
-        int temp = heap[in];
+        string temp = heap[in];
         heap[in] = heap[par(in)];
         heap[par(in)] = temp;
         heapifyup(par(in));
@@ -101,7 +117,7 @@ void BHeap::heapifydown(int in) {
         child = child1;
     }
     if (child > 0 && compare(heap[in], heap[child])) { //!zmiana
-        int t = heap[in];
+        string t = heap[in];
         heap[in] = heap[child];
         heap[child] = t;
         heapifydown(child);
@@ -119,7 +135,7 @@ int main()
     BHeap kopiec;
     int n;
     string s, command;
-    int data;
+    string data;
     while (cin>>command) {
         if (command == "+") {
             cin >> data;
@@ -136,24 +152,13 @@ int main()
         else if (command == "r") {
             kopiec.heap.clear();
             cin >> n;
-            vector <int> h;
+            vector <string> h;
             for (int i = 0; i < n; i++) {
                 cin >> data;
                 h.push_back(data);
-                /*kopiec.Insert(data);
-                cout << "----------" << endl;
-                kopiec.showHeap();
-                */
-                //kopiec.heap.push_back(data);
-                //kopiec.heapifydown(0);
             }
             kopiec.heap = h;
             kopiec.buduj();
-            //kopiec.showHeap();
-            //kopiec.heapifyup(kopiec.heap.size() - 1);
-            
-            
-
         }
         else if (command == "s") {
             kopiec.max ? kopiec.max = false : kopiec.max = true;
@@ -165,14 +170,3 @@ int main()
 
 }
 
-
-// Uruchomienie programu: Ctrl + F5 lub menu Debugowanie > Uruchom bez debugowania
-// Debugowanie programu: F5 lub menu Debugowanie > Rozpocznij debugowanie
-
-// Porady dotyczące rozpoczynania pracy:
-//   1. Użyj okna Eksploratora rozwiązań, aby dodać pliki i zarządzać nimi
-//   2. Użyj okna programu Team Explorer, aby nawiązać połączenie z kontrolą źródła
-//   3. Użyj okna Dane wyjściowe, aby sprawdzić dane wyjściowe kompilacji i inne komunikaty
-//   4. Użyj okna Lista błędów, aby zobaczyć błędy
-//   5. Wybierz pozycję Projekt > Dodaj nowy element, aby utworzyć nowe pliki kodu, lub wybierz pozycję Projekt > Dodaj istniejący element, aby dodać istniejące pliku kodu do projektu
-//   6. Aby w przyszłości ponownie otworzyć ten projekt, przejdź do pozycji Plik > Otwórz > Projekt i wybierz plik sln
