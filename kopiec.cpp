@@ -22,6 +22,7 @@ public:
     int ExtractMin();
     void showHeap();
     int Size();
+    void buduj();
 };
 int BHeap::Size() {
     return heap.size();
@@ -51,10 +52,13 @@ int BHeap::ExtractMin() {
 void BHeap::showHeap() {
     vector <int>::iterator pos = heap.begin();
     //cout << "Heap --> ";
-    while (pos != heap.end()) {
+    for (int i = 0; i < heap.size(); i++) {
+        cout << heap[i] << " ";
+    }
+   /* while (pos != heap.end()) {
         cout << *pos << " ";
         pos++;
-    }
+    }*/
     cout << endl;
 }
 int BHeap::l(int parent) {
@@ -80,6 +84,7 @@ int BHeap::par(int child) {
 }
 void BHeap::heapifyup(int in) {
     if (in >= 0 && par(in) >= 0 && heap[par(in)] < heap[in]) {
+        cout << "PARENT: " << heap[in] << " to " << heap[par(in)] << endl;
         int temp = heap[in];
         heap[in] = heap[par(in)];
         heap[par(in)] = temp;
@@ -87,8 +92,8 @@ void BHeap::heapifyup(int in) {
     }
 }
 void BHeap::heapifydown(int in) {
-    int child = r(in);
-    int child1 = l(in);
+    int child = l(in);
+    int child1 = r(in);
     if (child >= 0 && child1 >= 0 && heap[child] < heap[child1]) { //! tut ez
         child = child1;
     }
@@ -97,6 +102,12 @@ void BHeap::heapifydown(int in) {
         heap[in] = heap[child];
         heap[child] = t;
         heapifydown(child);
+    }
+}
+
+void BHeap::buduj() {
+    for (int i = heap.size() - 1; i >= 0; i--) {
+        heapifydown(i);
     }
 }
 
@@ -125,13 +136,18 @@ int main()
             vector <int> h;
             for (int i = 0; i < n; i++) {
                 cin >> data;
-                kopiec.Insert(data);
+                h.push_back(data);
+                /*kopiec.Insert(data);
                 cout << "----------" << endl;
                 kopiec.showHeap();
-                cout << "----------" << endl;
+                */
                 //kopiec.heap.push_back(data);
                 //kopiec.heapifydown(0);
-            }//kopiec.heapifyup(kopiec.heap.size() - 1);
+            }
+            kopiec.heap = h;
+            kopiec.buduj();
+            kopiec.showHeap();
+            //kopiec.heapifyup(kopiec.heap.size() - 1);
             
             
 
