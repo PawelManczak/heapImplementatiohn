@@ -9,6 +9,8 @@ using namespace std;
 
 class BHeap {
 public:
+    bool max = true;
+    bool compare(int a, int b);
     vector <int> heap;
     int l(int parent);
     int r(int parent);
@@ -21,12 +23,8 @@ public:
     void DeleteMin();
     int ExtractMin();
     void showHeap();
-    int Size();
     void buduj();
 };
-int BHeap::Size() {
-    return heap.size();
-}
 void BHeap::Insert(int ele) {
     heap.push_back(ele);
     heapifyup(heap.size() - 1);
@@ -61,6 +59,11 @@ void BHeap::showHeap() {
     }*/
     cout << endl;
 }
+bool BHeap::compare(int a, int b)
+{
+    if (!max) return a > b;
+    else return a < b;
+}
 int BHeap::l(int parent) {
     int l = 2 * parent + 1;
     if (l < heap.size())
@@ -83,8 +86,8 @@ int BHeap::par(int child) {
         return p;
 }
 void BHeap::heapifyup(int in) {
-    if (in >= 0 && par(in) >= 0 && heap[par(in)] < heap[in]) {
-        cout << "PARENT: " << heap[in] << " to " << heap[par(in)] << endl;
+    if (in >= 0 && par(in) >= 0 && compare(heap[par(in)], heap[in])) {
+       // cout << "PARENT: " << heap[in] << " to " << heap[par(in)] << endl;
         int temp = heap[in];
         heap[in] = heap[par(in)];
         heap[par(in)] = temp;
@@ -94,10 +97,10 @@ void BHeap::heapifyup(int in) {
 void BHeap::heapifydown(int in) {
     int child = l(in);
     int child1 = r(in);
-    if (child >= 0 && child1 >= 0 && heap[child] < heap[child1]) { //! tut ez
+    if (child >= 0 && child1 >= 0 && compare(heap[child], heap[child1])) { //! tut ez
         child = child1;
     }
-    if (child > 0 && heap[in] < heap[child]) { //!zmiana
+    if (child > 0 && compare(heap[in], heap[child])) { //!zmiana
         int t = heap[in];
         heap[in] = heap[child];
         heap[child] = t;
@@ -146,11 +149,15 @@ int main()
             }
             kopiec.heap = h;
             kopiec.buduj();
-            kopiec.showHeap();
+            //kopiec.showHeap();
             //kopiec.heapifyup(kopiec.heap.size() - 1);
             
             
 
+        }
+        else if (command == "s") {
+            kopiec.max ? kopiec.max = false : kopiec.max = true;
+            kopiec.buduj();
         }
         else if(command == "q") break;
         
